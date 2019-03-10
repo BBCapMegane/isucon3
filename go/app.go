@@ -304,13 +304,13 @@ func recentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	rows.Close()
 
-	rows, err = dbConn.Query("SELECT * FROM memos WHERE is_private=0 ORDER BY created_at DESC LIMIT ? OFFSET ?", memosPerPage, memosPerPage*page)
+	rows, err = dbConn.Query("SELECT * FROM memos WHERE is_private=0 ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?", memosPerPage, memosPerPage*page)
 	if err != nil {
 		serverError(w, err)
 		return
 	}
 	memos := make(Memos, 0)
-	stmtUser, err := dbConn.Prepare("SELECT username FROM users WHERE id=? LIMIT 1")
+	stmtUser, err := dbConn.Prepare("SELECT username FROM users WHERE id=?")
 	defer stmtUser.Close()
 	if err != nil {
 		serverError(w, err)
