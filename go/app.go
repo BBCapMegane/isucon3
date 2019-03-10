@@ -184,13 +184,13 @@ func getUser(w http.ResponseWriter, r *http.Request, dbConn *sql.DB, session *se
 		return nil
 	}
 	user := &User{}
-	rows, err := dbConn.Query("SELECT id, username, last_access FROM users WHERE id=?", userId)
+	rows, err := dbConn.Query("SELECT * FROM users WHERE id=?", userId)
 	if err != nil {
 		serverError(w, err)
 		return nil
 	}
 	if rows.Next() {
-		rows.Scan(&user.Id, &user.Username, &user.LastAccess)
+		rows.Scan(&user.Id, &user.Username, &user.Password, &user.Salt, &user.LastAccess)
 		rows.Close()
 	}
 	if user != nil {
